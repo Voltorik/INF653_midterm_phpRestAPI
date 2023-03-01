@@ -1,0 +1,5 @@
+SetEnv USERNAME "volt"
+SetEnv PASSWORD "k19O0M7DJiRuRsewbYsbeQTR0p5g7m8c"
+SetEnv DBNAME "quotesdb_dkzz"
+SetEnv HOST "dpg-cfv9m1vdvk4rro4c7gug-a.oregon-postgres.render.com"
+SetEnv PORT "5432"
