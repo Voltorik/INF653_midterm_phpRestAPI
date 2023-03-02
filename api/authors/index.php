@@ -14,7 +14,8 @@
     $database = new Database();
     $db = $database->connect();
 
-    if ($method === 'GET') {
-        require_once('read.php');
-        
-    }
+    if ($method === 'GET' && isset($_GET['id'])) {
+        require_once('read_single.php');
+    } else {
+      require_once('read.php');
+    } 
