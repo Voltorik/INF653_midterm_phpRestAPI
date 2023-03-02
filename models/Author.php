@@ -17,7 +17,7 @@ class Author {
         $query = 'SELECT a.id, a.author
         FROM '. $this->table . ' a
         ORDER BY 
-            a.author ASC';
+            a.id ASC';
         // Prepare statment
         $stmt = $this->conn->prepare($query);
 
