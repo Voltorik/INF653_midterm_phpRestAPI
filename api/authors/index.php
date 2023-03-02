@@ -9,3 +9,12 @@
         exit();
     } 
     
+    // Import database, instantiate, and connect
+    include_once('config/Database.php');
+    $database = new Database();
+    $db = $database->connect();
+
+    if ($method === 'GET') {
+        require_once('api/read.php');
+        
+    }
