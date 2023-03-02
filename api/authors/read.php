@@ -1,5 +1,5 @@
 <?php
-    include_once '..\..\models\Author.php';
+    include_once ('../../models/Author.php');
 
     // Instantiate author object
     $author = new Author($db);
@@ -14,10 +14,9 @@
     if ($entries > 0) {
         // Post authors
         $authors_arr = array();
-        $authors_arr['data'] = array();
 
         while($entries = $result->fetch(PDO::FETCH_ASSOC)) {
-            extract($result);
+            extract($entries);
 
             $author_item = array(
                 'id' => $id,
@@ -25,7 +24,7 @@
             );
 
             // Push to "data"
-            array_push($authors_arr['data'], $author_item);
+            array_push($authors_arr, $author_item);
         }
 
         // Turn to JSON & output
