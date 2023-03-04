@@ -10,11 +10,16 @@ $author->id = isset($_GET['id']) ? $_GET['id'] : die();
 // Get post 
 $author->read_single();
 
-// Create array
-$author_arr = array(
+if ($author->author == null) {
+  echo json_encode(array(
+    'message' =>'author_id ' . $_GET['id'] . ' Not Found'
+  ));
+} else {
+  // Make JSON
+  echo json_encode(
+  array(
     'id' => $author->id,
-    'author' => $author->author,
-);
-
-// Make JSON
-print_r(json_encode($author_arr));
+    'author' => $author->author
+  ));
+}
+  

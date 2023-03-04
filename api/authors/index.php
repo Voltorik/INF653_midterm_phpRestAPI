@@ -20,4 +20,6 @@
       require_once('read.php');
     } else if ($method === 'POST') {
       require_once('create.php');
+    } else if ($method === 'DELETE') {
+      require_once('delete.php');
     }

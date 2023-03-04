@@ -44,7 +44,7 @@ class Author {
     $stmt->execute();
 
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    
     // Set properties
     $this->id = $result['id'];
     $this->author = $result['author'];
@@ -69,6 +69,31 @@ class Author {
       return true;
     }
 
+    printf("Error: %s.\n", $stmt->error);
+
+    return false;
+  }
+
+  // Delete Author
+  public function delete() {
+    // Create query
+    $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id';
+
+    // Prepare statement
+    $stmt = $this->conn->prepare($query);
+
+    // Clean data
+    $this->id = htmlspecialchars(strip_tags($this->id));
+
+    // Bind data
+    $stmt->bindParam(':id', $this->id);
+
+    //Execute query
+    if($stmt->execute()) {
+      return true;
+    }
+
+    // Print error if something goes wrong
     printf("Error: %s.\n", $stmt->error);
 
     return false;
