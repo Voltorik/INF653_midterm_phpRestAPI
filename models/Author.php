@@ -45,6 +45,7 @@ class Author {
 
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    // If result is not null
     if ($result) {
       // Set properties
       $this->id = $result['id'];
@@ -55,19 +56,23 @@ class Author {
   // Create new author
   public function create() {
     // Create query
-    $query = 'INSERT INTO ' . $this->table . ' (author) VALUES (:author)';
-
+    $query = 'INSERT INTO ' . $this->table . ' (author) VALUES (:author) RETURNING id';
+    
     // Prepare statment
     $stmt = $this->conn->prepare($query);
 
     // Clean data
     $this->author = htmlspecialchars(strip_tags($this->author));
-
+  
     // Bind data
     $stmt->bindParam(':author', $this->author);
 
     // Execute query
     if($stmt->execute()) {
+      // Get last inserted id and assign to current author object
+      $result = $stmt->fetch(PDO::FETCH_ASSOC);
+      $this->id = $result['id'];
+      
       return true;
     }
 
@@ -79,7 +84,7 @@ class Author {
   // Delete Author
   public function delete() {
     // Create query
-    $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id';
+    $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id RETURNING id';
 
     // Prepare statement
     $stmt = $this->conn->prepare($query);
@@ -92,21 +97,23 @@ class Author {
 
     //Execute query
     if($stmt->execute()) {
-      return true;
+      // Get last inserted id and assign to current author object
+      $result = $stmt->fetch(PDO::FETCH_ASSOC);
+      if($result) {
+        $this->id = $result['id'];
+        return true;
+      } else {
+        return false;
+      }
     }
-
-    // Print error if something goes wrong
-    printf("Error: %s.\n", $stmt->error);
-
-    return false;
   }
 
   public function update() {
     // Create query
     $query = 'UPDATE ' . $this->table . 
-    ' SET author = :author, 
+    ' SET author = :author 
       WHERE 
-        id = :id';
+        id = :id RETURNING id';
 
     // Prepare statement
     $stmt = $this->conn->prepare($query);
@@ -121,12 +128,15 @@ class Author {
 
     // Execute query
     if($stmt->execute()) {
-      return true;
+      // Get returned id
+      $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      // If id is set then author id exists
+      if(isset($result['id'])) {
+        return true;
+      } else {
+        return false;
+      }
     }
-
-    // Print error if something goes wrong
-    printf("Error: %s.\n", $stmt->error);
-
-    return false;
   }
 }

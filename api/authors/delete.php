@@ -8,15 +8,17 @@ $author = new Author($db);
 $data = json_decode(file_get_contents("php://input"));
 
 // Set ID to update
-$author->id = isset($_GET['id']) ? $_GET['id'] : die();
+$author->id = $data->id;
 
 // Delete post
 if($author->delete()) {
-    echo json_encode(
-    array('message' => 'Deleted Author id: '. $author->id)
-    );
+  echo json_encode(
+  array(
+    'id' => $author->id
+  ));
 } else {
     echo json_encode(
-    array('message' => 'Author Not Deleted')
-    );
+    array(
+      'message' => 'author_id Not Found'
+    ));
 }
