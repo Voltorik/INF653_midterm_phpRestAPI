@@ -22,4 +22,6 @@
       require_once('create.php');
     } else if ($method === 'DELETE') {
       require_once('delete.php');
+    } else if ($method === 'PUT') {
+      require_once('update.php');
     }

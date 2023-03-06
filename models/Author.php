@@ -32,22 +32,24 @@ class Author {
     // Create query
     $query = 'SELECT a.id, a.author
       FROM ' . $this->table . ' a
-      WHERE a.id = ?';
+      WHERE a.id = :id';
 
     // Prepare statement
     $stmt = $this->conn->prepare($query);
 
     // Bind ID
-    $stmt->bindParam(1, $this->id);
+    $stmt->bindParam(':id', $this->id);
 
     // Execute query
     $stmt->execute();
 
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    // Set properties
-    $this->id = $result['id'];
-    $this->author = $result['author'];
+
+    if ($result) {
+      // Set properties
+      $this->id = $result['id'];
+      $this->author = $result['author'];
+    }
   }
 
   // Create new author
@@ -89,6 +91,35 @@ class Author {
     $stmt->bindParam(':id', $this->id);
 
     //Execute query
+    if($stmt->execute()) {
+      return true;
+    }
+
+    // Print error if something goes wrong
+    printf("Error: %s.\n", $stmt->error);
+
+    return false;
+  }
+
+  public function update() {
+    // Create query
+    $query = 'UPDATE ' . $this->table . 
+    ' SET author = :author, 
+      WHERE 
+        id = :id';
+
+    // Prepare statement
+    $stmt = $this->conn->prepare($query);
+
+    // Clean data
+    $this->author = htmlspecialchars(strip_tags($this->author));
+    $this->id = htmlspecialchars(strip_tags($this->id));
+
+    // Bind data
+    $stmt->bindParam(':author', $this->author);
+    $stmt->bindParam(':id', $this->id);
+
+    // Execute query
     if($stmt->execute()) {
       return true;
     }

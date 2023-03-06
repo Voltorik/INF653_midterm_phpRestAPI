@@ -1,21 +1,23 @@
 <?php 
 include_once ('../../models/Author.php');
 
-// Instantiate blog post object
+// Instantiate author object
 $author = new Author($db);
 
-// Get ID
+// Assign given ID to author id
 $author->id = isset($_GET['id']) ? $_GET['id'] : die();
 
-// Get post 
+// Get author using given id
 $author->read_single();
 
+// Check if author was found
 if ($author->author == null) {
+  // If not found output Not Found
   echo json_encode(array(
-    'message' =>'author_id ' . $_GET['id'] . ' Not Found'
+    'message' => 'author_id Not Found'
   ));
 } else {
-  // Make JSON
+  // If found output id and author
   echo json_encode(
   array(
     'id' => $author->id,
