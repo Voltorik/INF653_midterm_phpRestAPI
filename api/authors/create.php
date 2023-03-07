@@ -12,7 +12,7 @@ if(isset($data->author)) {
   
   $author->author = $data->author;
   
-  // Create post
+  // Create author
   if($author->create()) {
     echo json_encode(
       array(

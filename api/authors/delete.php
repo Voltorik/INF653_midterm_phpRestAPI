@@ -1,16 +1,14 @@
 <?php 
-include_once '../../models/Author.php';
-
-// Instantiate blog post object
+// Instantiate author object
 $author = new Author($db);
 
 // Get raw posted data
 $data = json_decode(file_get_contents("php://input"));
 
-// Set ID to update
+// Set id to update
 $author->id = $data->id;
 
-// Delete post
+// Delete author
 if($author->delete()) {
   echo json_encode(
   array(

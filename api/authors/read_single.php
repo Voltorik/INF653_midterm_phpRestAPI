@@ -1,10 +1,8 @@
 <?php 
-include_once ('../../models/Author.php');
-
 // Instantiate author object
 $author = new Author($db);
 
-// Assign given ID to author id
+// Assign given id to author_id
 $author->id = isset($_GET['id']) ? $_GET['id'] : die();
 
 // Get author using given id

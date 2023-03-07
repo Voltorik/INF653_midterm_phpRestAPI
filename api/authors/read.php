@@ -1,6 +1,4 @@
 <?php
-include_once ('../../models/Author.php');
-
 // Instantiate author object
 $author = new Author($db);
 
