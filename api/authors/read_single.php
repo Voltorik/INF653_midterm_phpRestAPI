@@ -5,8 +5,10 @@ $author = new Author($db);
 // Assign given id to author_id
 $author->id = isset($_GET['id']) ? $_GET['id'] : die();
 
-// Get author using given id
-$author->read_single();
+if (existsInTable($author->id, $author)) {
+  // Get author using given id
+  $author->read_single();
+}
 
 // Check if author was found
 if ($author->author == null) {

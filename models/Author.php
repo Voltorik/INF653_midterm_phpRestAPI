@@ -40,17 +40,29 @@ class Author {
     // Bind ID
     $stmt->bindParam(':id', $this->id);
 
-    // Execute query
-    $stmt->execute();
+     // Execute query
+    try {
+        $stmt->execute();
+        
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->id = $result['id'];
+        $this->author = $result['author'];
 
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // If result is not null
-    if ($result) {
-      // Set properties
-      $this->id = $result['id'];
-      $this->author = $result['author'];
+    } catch (PDOException $e) {
+        echo 'Error ' . $e->getMessage();
     }
+    
+
+
+
+    // $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // // If result is not null
+    // if ($result) {
+    //   // Set properties
+    //   $this->id = $result['id'];
+    //   $this->author = $result['author'];
+    // }
   }
 
   // Create new author

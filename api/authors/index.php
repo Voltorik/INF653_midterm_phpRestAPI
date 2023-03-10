@@ -15,6 +15,7 @@ $database = new Database();
 $db = $database->connect();
 
 include_once ('../../models/Author.php');
+include_once('../../functions/existsInTable.php');
 
 if ($method === 'GET' && isset($_GET['id'])) {
   require_once('read_single.php');

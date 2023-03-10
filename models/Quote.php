@@ -58,9 +58,7 @@ class Quote {
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
       $this->id = $result['id'];
 
-      
       return true;
-    
     } catch (PDOException $e) {
       echo json_encode(array(
         'message' => '_id Not Found'
