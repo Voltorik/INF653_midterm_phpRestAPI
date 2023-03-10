@@ -26,36 +26,40 @@ class Category {
     $stmt->bindParam(':category', $this->category);
 
     // Execute query
-    if($stmt->execute()) {
+    try { 
+      $stmt->execute();
+      
       // Get last inserted id and assign to current category object
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
       $this->id = $result['id'];
       
-      return true;
+    } catch (PDOException $e) {
+      echo 'Error: ' . $e->getMessage();
     }
-
-    printf("Error: %s.\n", $stmt->error);
-
-    return false;
   }
 
   // Get categories
   public function read() {
-      // Create query
-      $query = 'SELECT c.id, c.category
-      FROM '. $this->table . ' c
-      ORDER BY 
-          c.id ASC';
-      // Prepare statment
-      $stmt = $this->conn->prepare($query);
+    // Create query
+    $query = 'SELECT c.id, c.category
+    FROM '. $this->table . ' c
+    ORDER BY 
+        c.id ASC';
+    
+    // Prepare statment
+    $stmt = $this->conn->prepare($query);
 
-      // Execute query
+    // Execute query
+    try {
       $stmt->execute();
-
       return $stmt;
+      
+    } catch (PDOException $e) {
+      echo 'Error: ' . $e->getMessage();
+    }
   }
 
-  // Get category using specified id
+  // Get category using given id
   public function read_single() {
     // Create query
     $query = 'SELECT c.id, c.category
@@ -69,46 +73,23 @@ class Category {
     $stmt->bindParam(':id', $this->id);
 
     // Execute query
-    $stmt->execute();
-
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // If result is not null
-    if ($result) {
-      // Set properties
-      $this->id = $result['id'];
-      $this->category = $result['category'];
-    }
-  }
-
-  // Delete Category
-  public function delete() {
-    // Create query
-    $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id RETURNING id';
-
-    // Prepare statement
-    $stmt = $this->conn->prepare($query);
-
-    // Clean data
-    $this->id = htmlspecialchars(strip_tags($this->id));
-
-    // Bind data
-    $stmt->bindParam(':id', $this->id);
-
-    //Execute query
-    if($stmt->execute()) {
-      // Get last inserted id and assign to current category object
+    try {
+      $stmt->execute();
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
-      if($result) {
+
+      // If id in table, set properties
+      if (!empty($result['id'])) {
         $this->id = $result['id'];
+        $this->category = $result['category'];
         return true;
-      } else {
-        return false;
       }
+      return false;
+    } catch (PDOException $e) {
+      echo 'Error: ' . $e->getMessage();
     }
   }
 
-  // Update Category
+  // Update category at given id
   public function update() {
     // Create query
     $query = 'UPDATE ' . $this->table . 
@@ -128,16 +109,52 @@ class Category {
     $stmt->bindParam(':id', $this->id);
 
     // Execute query
-    if($stmt->execute()) {
-      // Get returned id
+    try {
+      $stmt->execute();
+      
+      // Get last inserted id
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-      // If id is set then category id exists
-      if(isset($result['id'])) {
+      // If id exists in table, return true
+      if(!empty($result['id'])) {
         return true;
-      } else {
-        return false;
-      }
+      } 
+      return false;
+    } catch (PDOException $e) {
+      echo 'Error: ' . $e->getMessage();
+    }
+  }
+
+  // Delete Category
+  public function delete() {
+    // Create query
+    $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id RETURNING id';
+
+    // Prepare statement
+    $stmt = $this->conn->prepare($query);
+
+    // Clean data
+    $this->id = htmlspecialchars(strip_tags($this->id));
+
+    // Bind data
+    $stmt->bindParam(':id', $this->id);
+
+    //Execute query
+    try {
+      $stmt->execute();
+      
+      // Get last inserted id 
+      $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      // If id exists in table, set id 
+      if(!empty($result['id'])) {
+        $this->id = $result['id'];
+        return true;
+      } 
+      return false;
+      
+    } catch (PDOException $e) {
+      echo 'Error: ' . $e->getMessage();
     }
   }
 }

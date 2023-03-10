@@ -10,6 +10,7 @@ $entries = $result->rowCount();
 
 // Check if any authors
 if ($entries > 0) {
+  
   // Post authors
   $authors_arr = array();
 
@@ -29,6 +30,6 @@ if ($entries > 0) {
   echo json_encode($authors_arr);
   
 } else {
-    // No authors found
-    echo json_encode(array('message' => 'No Authors Found'));
+  // No authors found
+  echo json_encode(array('message' => 'No Authors Found'));
 }

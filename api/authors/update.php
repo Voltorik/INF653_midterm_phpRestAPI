@@ -12,7 +12,7 @@ if(isset($data->author) && isset($data->id)) {
   $author->id = $data->id;
   $author->author = $data->author;
   
-  // Update post
+  // Update author
   if($author->update()) {
     echo json_encode(
     array(
