@@ -20,7 +20,6 @@ if(isset($data->quote) and isset($data->author_id) and isset($data->category_id)
     array(
       'message' => 'author_id Not Found'
     ));
-    exit();
   } else if (!existsInTable($data->category_id, new Category($db))) {
     // If not found output Not Found
     echo json_encode(
