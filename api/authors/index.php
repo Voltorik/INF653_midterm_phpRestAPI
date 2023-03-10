@@ -1,4 +1,5 @@
 <?php
+// Set up headers
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 $method = $_SERVER['REQUEST_METHOD'];
@@ -9,14 +10,16 @@ if ($method === 'OPTIONS') {
     exit();
 } 
 
-// Import database, instantiate, and connect
+// Include dependency files
 include_once('../../config/Database.php');
-$database = new Database();
-$db = $database->connect();
-
 include_once ('../../models/Author.php');
 include_once('../../functions/existsInTable.php');
 
+// Import database, instantiate, and connect
+$database = new Database();
+$db = $database->connect();
+
+// Flow control for CRUD operations
 if ($method === 'GET' && isset($_GET['id'])) {
   require_once('read_single.php');
 } else if ($method === 'GET') {

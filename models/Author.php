@@ -13,18 +13,23 @@ class Author {
 
   // Get authors
   public function read() {
-      // Create query
-      $query = 'SELECT a.id, a.author
-      FROM '. $this->table . ' a
-      ORDER BY 
-          a.id ASC';
-      // Prepare statment
-      $stmt = $this->conn->prepare($query);
+    // Create query
+    $query = 'SELECT a.id, a.author
+    FROM '. $this->table . ' a
+    ORDER BY 
+        a.id ASC';
+  
+    // Prepare statment
+    $stmt = $this->conn->prepare($query);
 
-      // Execute query
+    // Execute query
+    try {
       $stmt->execute();
-
       return $stmt;
+      
+    } catch (PDOException $e) {
+      echo 'Error: ' . $e->getMessage();
+    }
   }
 
   // Get author using specified id
@@ -40,29 +45,20 @@ class Author {
     // Bind ID
     $stmt->bindParam(':id', $this->id);
 
-     // Execute query
+    // Execute query
     try {
         $stmt->execute();
-        
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $this->id = $result['id'];
-        $this->author = $result['author'];
-
+        // If id in table, set properties
+        if (!empty($result['id'])) {
+          $this->id = $result['id'];
+          $this->author = $result['author'];
+          return true;
+        }
+      return false;
     } catch (PDOException $e) {
-        echo 'Error ' . $e->getMessage();
+      echo 'Error: ' . $e->getMessage();
     }
-    
-
-
-
-    // $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // // If result is not null
-    // if ($result) {
-    //   // Set properties
-    //   $this->id = $result['id'];
-    //   $this->author = $result['author'];
-    // }
   }
 
   // Create new author
@@ -80,17 +76,16 @@ class Author {
     $stmt->bindParam(':author', $this->author);
 
     // Execute query
-    if($stmt->execute()) {
+    try {
+      $stmt->execute();
+      
       // Get last inserted id and assign to current author object
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
       $this->id = $result['id'];
       
-      return true;
+    } catch (PDOException $e) {
+      echo 'Error: ' . $e->getMessage();
     }
-
-    printf("Error: %s.\n", $stmt->error);
-
-    return false;
   }
 
   // Delete Author
@@ -108,15 +103,21 @@ class Author {
     $stmt->bindParam(':id', $this->id);
 
     //Execute query
-    if($stmt->execute()) {
-      // Get last inserted id and assign to current author object
+    try {
+      $stmt->execute();
+      
+      // Get last inserted id 
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
-      if($result) {
+
+      // If id not empty, set id to author->id
+      if(!empty($result['id'])) {
         $this->id = $result['id'];
         return true;
-      } else {
-        return false;
-      }
+      } 
+      return false;
+      
+    } catch (PDOException $e) {
+      echo 'Error: ' . $e->getMessage();
     }
   }
 
@@ -139,16 +140,19 @@ class Author {
     $stmt->bindParam(':id', $this->id);
 
     // Execute query
-    if($stmt->execute()) {
-      // Get returned id
+    try {
+      $stmt->execute();
+      
+      // Get last inserted id
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-      // If id is set then author id exists
-      if(isset($result['id'])) {
+  
+      // If id not empty, return true
+      if(!empty($result['id'])) {
         return true;
-      } else {
-        return false;
-      }
-    }
+      } 
+      return false;
+    } catch (PDOException $e) {
+      echo 'Error: ' . $e->getMessage();
+    } 
   }
 }
