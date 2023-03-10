@@ -15,3 +15,9 @@ $database = new Database();
 $db = $database->connect();
 
 include_once('../../models/Quote.php');
+include_once('../../models/Author.php');
+include_once('../../models/Category.php');
+
+if ($method === 'POST') {
+  require_once ('create.php');
+}
