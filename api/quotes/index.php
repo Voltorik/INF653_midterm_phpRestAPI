@@ -19,5 +19,7 @@ include_once('../../models/Author.php');
 include_once('../../models/Category.php');
 
 if ($method === 'POST') {
-  require_once ('create.php');
+  require_once('create.php');
+} else if ($method === 'GET' && isset($_GET['id'])) {
+  require_once('read_single.php');
 }
