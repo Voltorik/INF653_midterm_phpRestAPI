@@ -1,40 +1,42 @@
 <?php 
 // Instantiate quote object
 $quote = new Quote($db);
-$author = new Author($db);
-$category = new Category($db);
 
 // Get raw posted data
 $data = json_decode(file_get_contents("php://input"));
 
 // Check for required params
 if(isset($data->quote) and isset($data->author_id) and isset($data->category_id)) {
-
+  
   // Set quote properties
   $quote->quote = $data->quote;
   $quote->author_id = $data->author_id;
   $quote->category_id = $data->category_id;
 
-  // Set ids to check
-  $author->id = $data->author_id;
-  $category->id = $data->category_id;
-
   // Check if ids exist in each table
-  if($quote->exists($author, $category)) {
+  if(!existsInTable($data->author_id, new Author($db))) {
+    // If not found output Not Found
+    echo json_encode(
+    array(
+      'message' => 'author_id Not Found'
+    ));
+    exit();
+  } else if (!existsInTable($data->category_id, new Category($db))) {
+    // If not found output Not Found
+    echo json_encode(
+    array(
+      'message' => 'category_id Not Found'
+    ));
+  } else {
     // Create post
-    if($quote->create()) {
-      echo json_encode(
-        array(
-          'id' => $quote->id,
-          'quote' => $quote->quote,
-          'author_id' => $quote->author_id,
-          'category_id' => $quote->category_id
-        ));
-    } else {
-      echo json_encode(
-        array('message' => 'Quote Not Created')
-      );
-    }
+    $quote->create();
+    echo json_encode(
+    array(
+      'id' => $quote->id,
+      'quote' => $quote->quote,
+      'author_id' => $quote->author_id,
+      'category_id' => $quote->category_id
+    ));
   }
   
 } else {

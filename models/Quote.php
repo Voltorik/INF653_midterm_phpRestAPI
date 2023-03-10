@@ -54,16 +54,13 @@ class Quote {
     try {
       // Execute query
       $stmt->execute();
+      
       // Get last inserted id and assign to current quote object
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
       $this->id = $result['id'];
 
-      return true;
     } catch (PDOException $e) {
-      echo json_encode(array(
-        'message' => '_id Not Found'
-      ));
-      return false;
+      echo 'Error: ' . $e->getMessage();
     }
   }
 }

@@ -13,7 +13,6 @@ if ($method === 'OPTIONS') {
 // Include dependency files
 include_once('../../config/Database.php');
 include_once ('../../models/Author.php');
-include_once('../../functions/existsInTable.php');
 
 // Import database, instantiate, and connect
 $database = new Database();
