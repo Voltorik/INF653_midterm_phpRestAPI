@@ -21,4 +21,9 @@ include_once('../../functions/existsInTable.php');
 
 if ($method === 'POST') {
   require_once ('create.php');
+} else if ($method === 'GET' && (isset($_GET['id'])) || 
+           isset($_GET['authorId']) || isset($_GET['categoryId'])) {
+  require_once('read_single.php');
+} else if ($method === 'GET') {
+  require_once('read.php');
 }

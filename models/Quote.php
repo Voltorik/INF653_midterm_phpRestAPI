@@ -63,4 +63,79 @@ class Quote {
       echo 'Error: ' . $e->getMessage();
     }
   }
+
+  // Read all quotes or all quotes by given id/s
+  public function read() {
+    
+    // Create query
+    $query = 'SELECT q.id, q.quote, a.author, c.category
+    FROM '. $this->table . ' q
+    JOIN authors a ON q.author_id = a.id
+    JOIN categories c ON q.category_id = c.id
+    ORDER BY 
+        q.id ASC';
+    
+    // Prepare statment
+    $stmt = $this->conn->prepare($query);
+
+    // Execute query
+    try {
+      $stmt->execute();
+      return $stmt;
+      
+    } catch (PDOException $e) {
+      echo 'Error: ' . $e->getMessage();
+    }
+  }
+
+  // Get quote using given id 
+  public function read_single() {
+    $bothParams = False;
+    
+    if ($this->id) {
+      $idQuery = 'q.id';
+      $idType = $this->id;
+    } else if ($this->author_id && $this->category_id) {
+      $bothParams = True;
+    } else if ($this->author_id) {
+      $idQuery = 'q.author_id';
+      $idType = $this->author_id;
+    } else if ($this->category_id) {
+      $idQuery = 'q.category_id';
+      $idType = $this->category_id;
+    }
+
+    if ($bothParams) {
+      $query = 'SELECT q.id, q.quote, a.author, c.category
+      FROM '. $this->table . ' q
+      JOIN authors a ON q.author_id = a.id
+      JOIN categories c ON q.category_id = c.id
+      WHERE q.author_id = '.$this->author_id.' AND q.category_id = '.$this->category_id;
+
+      // Prepare statement
+      $stmt = $this->conn->prepare($query);
+      
+    } else {
+      // Create query
+      $query = 'SELECT q.id, q.quote, a.author, c.category
+      FROM '. $this->table . ' q
+      JOIN authors a ON q.author_id = a.id
+      JOIN categories c ON q.category_id = c.id
+      WHERE '.$idQuery.' = :id';
+  
+      // Prepare statement
+      $stmt = $this->conn->prepare($query);
+  
+      // Bind ID
+      $stmt->bindParam(':id', $idType);
+    }
+    
+    // Execute query
+    try {
+      $stmt->execute();
+      return $stmt;
+    } catch (PDOException $e) {
+      echo 'Error: ' . $e->getMessage();
+    }
+  }
 }
